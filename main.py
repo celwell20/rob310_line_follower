@@ -90,12 +90,11 @@ if __name__ == "__main__":
             L_setpoint = 1
             R_setpoint = -0.5
             
-        L_setpoint_filter = 
-        R_setpoint_filter = 
-#         (1 - self.alpha) * self.filtered_speed + self.alpha * current_speed
+        L_setpoint_filtered = L_filter.update(L_setpoint)
+        R_setpoint_filtered = R_filter.update(R_setpoint)
 
-        L_pid.set_speed(L_setpoint)   # apply the setpoint to the 
-        R_pid.set_speed(R_setpoint)
+        L_pid.set_speed(L_setpoint_filtered)   # apply the setpoint to the 
+        R_pid.set_speed(R_setpoint_filtered)
 
         L_motor_duty = L_pid.update(omega_L, dt) # update the setpoint using the PID controller
         R_motor_duty = R_pid.update(omega_R, dt)
