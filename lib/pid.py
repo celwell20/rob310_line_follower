@@ -3,6 +3,7 @@ import utime
 from encoder import Encoder
 from motor import Motor
 from mbot_defs import *
+import asyncio
 
 class PID:
     def __init__(self, P=0.0, I=0.0, D=0.0, setpoint=0.0):
@@ -14,14 +15,14 @@ class PID:
         self.integral = 0
     
     def update(self, curr_val, dt):
-        error = self.setpoint - curr_val
+        error = self.setpoint - curr_val # Error units are rev / s
         P = error*self.Kp
-        self.integral += error * dt * self.Ki
+        self.integral += error * dt * self.Ki    # Gain units are [ % duty cycle / (rad / s) ]
         D = ((error-self.prev_error)/dt)*self.Kd
         self.prev_error = error
-        return (P + self.integral + D)
+        return (P + self.integral + D) # PID output is a duty cycle
     
-    def setPoint(self, setpoint):
+    def set_speed(self, setpoint):
         self.setpoint = setpoint
         self.prev_error = 0
         
@@ -33,6 +34,19 @@ class PID:
         
     def setD(self, D):
         self.Ki = D
+
+# class wheel_speed_control:
+#     def __init__(self, encoder, motor, pid, setpoint):
+#         self.encoder = encoder
+#         self.motor = motor
+#         self.pid = pid
+#         self.setpoint = setpoint
+#         
+#     async def update(self):
+#         encoder_t0 = encoder.encoderCount
+#         asynco.sleep_ms(200)
+#         encoder_t1 = encoder.encoderCount
+#         omega_meas = (encoder_t1 - encoder_t0) / 
 
 if __name__ == "__main__":
     #declare vars, DO NOT CHANGE
