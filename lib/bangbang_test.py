@@ -8,7 +8,7 @@ from mbot_defs import *
 if __name__ == "__main__":
     line_sns = LineSensor(4, 5)
     
-    mot0pol = -1
+    mot0pol = 1
     mot1pol = -1
     
     mot0 = Motor(mot0_pwm_pin, mot0_dir_pin)
