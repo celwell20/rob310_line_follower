@@ -13,9 +13,9 @@ LEFT_CTRL_INPUT = -1
 RIGHT_CTRL_INPUT = 1
 
 # Wheel speed PID parameters
-K_P = 1
+K_P = 0.5
 K_I = 0.1
-K_D = 0
+K_D = 0.0001
 
 LEFT_MOTOR_POLARITY = 1
 RIGHT_MOTOR_POLARITY = -1
@@ -75,15 +75,15 @@ if __name__ == "__main__":
             r_enc_count_prev = r_enc_count_pres
             
             present_time = utime.ticks_ms()
-            
+            dt = utime.ticks_diff(present_time, loop_start_time)
             #print(f'left revs: {CONV*l_enc_delta}, right revs {CONV*r_enc_delta}')
             #print(f"time delta: {utime.ticks_diff(present_time, loop_start_time)}")
-            if utime.ticks_diff(present_time, loop_start_time) == 0: # set measured wheel speed to zero at start to prevent dividing by zero
+            if dt == 0: # set measured wheel speed to zero at start to prevent dividing by zero
                 omega_L = 0
                 omega_R = 0
             else: # calculate present wheel speed velocities
-                omega_L = CONV * l_enc_delta / (utime.ticks_diff(present_time, loop_start_time) / 1000)  # units are rev / s --> divide by 1000 to go from ms to s
-                omega_R = CONV * r_enc_delta / (utime.ticks_diff(present_time, loop_start_time) / 1000)  # units are rev / s
+                omega_L = CONV * l_enc_delta / (dt / 1000)  # units are rev / s --> divide by 1000 to go from ms to s
+                omega_R = CONV * r_enc_delta / (dt / 1000)  # units are rev / s
             
             print(f'omega_L: {round(omega_L,2)}, omega_R {round(omega_R,2)}')
             
@@ -97,10 +97,10 @@ if __name__ == "__main__":
             
             elif bb_output == LEFT_CTRL_INPUT: # turn mbot to the left
                 L_setpoint = -0.1
-                R_setpoint = 0.2
+                R_setpoint = 0.25
                 
             elif bb_output == RIGHT_CTRL_INPUT: # turn mbot to the right
-                L_setpoint = 0.2
+                L_setpoint = 0.25
                 R_setpoint = -0.1
             
             #print(f'left setpoint: {L_setpoint}, right setpoint {R_setpoint}')
@@ -112,9 +112,9 @@ if __name__ == "__main__":
 
             L_pid.set_speed(L_setpoint)   # apply the setpoint to the pid controller
             R_pid.set_speed(R_setpoint)
-
-            L_motor_duty = L_pid.update(omega_L, dt) # update the duty cycle output using the PID controller
-            R_motor_duty = R_pid.update(omega_R, dt)
+            #print(dt)
+            L_motor_duty = L_pid.update(omega_L, dt/1000) # update the duty cycle output using the PID controller
+            R_motor_duty = R_pid.update(omega_R, dt/1000)
             
             #print(f'left duty {L_motor_duty}, right duty {R_motor_duty}')
             

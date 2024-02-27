@@ -38,7 +38,7 @@ class PID:
         D = ((error-self.prev_error)/dt)*self.Kd
         self.prev_error = error
         #return P
-        return (P + self.integral + D) # PID output is a duty cycle
+        return (P + self.integral) # PID output is a duty cycle
     
     def set_speed(self, setpoint):
         self.setpoint = setpoint
