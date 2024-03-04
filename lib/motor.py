@@ -17,6 +17,7 @@ class Motor:
             self.pwm.duty_u16(int(-duty * 65535))
         else:
             print("ERROR: duty out of range")
+            self.pwm.duty_u16(int(0))
 
 if __name__ == "__main__":
     mot0 = Motor(2, 14)
