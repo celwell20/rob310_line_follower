@@ -89,19 +89,6 @@ if __name__ == "__main__":
             
             loop_start_time = present_time # book keeping for next control loop iteration
             
-            #bb_output = bb_controller.update()      # tells us whether to turn left or right
-            #print(f"bangbang output: {bb_output}")
-#             if bb_output == STOP_CTRL_INPUT:   # stop the mbot if it doesn't see any line
-#                 L_setpoint = 0
-#                 R_setpoint = 0
-#             
-#             elif bb_output == LEFT_CTRL_INPUT: # turn mbot to the left
-#                 L_setpoint = -0.1
-#                 R_setpoint = 0.25
-#                 
-#             elif bb_output == RIGHT_CTRL_INPUT: # turn mbot to the right
-#                 L_setpoint = 0.25
-#                 R_setpoint = -0.1
             L_setpoint, R_setpoint = bb_controller.update()
             #print(f'left setpoint: {L_setpoint}, right setpoint {R_setpoint}')
             
