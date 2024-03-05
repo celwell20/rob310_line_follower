@@ -20,11 +20,11 @@ class BangBang:
             R_setpoint = 0
             
         elif right_sensors > 0:         # turn the robot to the left if the right sensors are triggered
-            L_setpoint = -0.1
-            R_setpoint = 0.25
+            L_setpoint = -0.175
+            R_setpoint = 0.35
             
         elif left_sensors > 0:          # turn the robot to the right if the left sensors are triggered
-            L_setpoint = 0.25
-            R_setpoint = -0.1
+            L_setpoint = 0.35
+            R_setpoint = -0.175
             
         return L_setpoint, R_setpoint

@@ -20,7 +20,7 @@ K_D = 0.0001
 LEFT_MOTOR_POLARITY = 1
 RIGHT_MOTOR_POLARITY = -1
 
-ALPHA = 0 # smoothing parameter
+ALPHA = 0.9 # smoothing parameter
 
 CONV = 1/(20.0 * 78.0)   # GEAR RATIO / ENCODER CPR CONVERZAION FACTOR; converts from encoder counts to motor output revs
 dt = 0.1
@@ -51,8 +51,8 @@ if __name__ == "__main__":
     L_setpoint = 0.25                                 # wheel speed setpoints
     R_setpoint = 0.25                                 # [rev / s]
     
-    L_filter.update(L_setpoint)   # initialization update for wheel speed filter
-    R_filter.update(R_setpoint)   # 
+    L_setpoint_filtered = L_filter.update(0)   # initialization update for wheel speed filter
+    L_setpoint_filtered = R_filter.update(0)   # 
     
     L_pid = PID(K_P, K_I, K_D, L_setpoint)     # wheel speed pid objects
     R_pid = PID(K_P, K_I, K_D, R_setpoint)
@@ -92,17 +92,17 @@ if __name__ == "__main__":
             L_setpoint, R_setpoint = bb_controller.update()
             #print(f'left setpoint: {L_setpoint}, right setpoint {R_setpoint}')
             
-            #L_setpoint_filtered = L_filter.update(L_setpoint)
-            #R_setpoint_filtered = R_filter.update(R_setpoint)
+            L_setpoint_filtered = L_filter.update(L_setpoint)
+            R_setpoint_filtered = R_filter.update(R_setpoint)
 
             #print(f'left filter: {L_setpoint_filtered}, right filter: {R_setpoint_filtered}')
 
-            L_pid.set_speed(L_setpoint)   # apply the setpoint to the pid controller
-            R_pid.set_speed(R_setpoint)
+            L_pid.set_speed(L_setpoint_filtered)   # apply the setpoint to the pid controller
+            R_pid.set_speed(R_setpoint_filtered)
             #print(dt)
             
-            error_L = L_setpoint - omega_L
-            error_R = R_setpoint - omega_R
+            error_L = L_setpoint_filtered - omega_L
+            error_R = R_setpoint_filtered - omega_R
             
             L_motor_duty = L_pid.update(error_L, dt/1000) # update the duty cycle output using the PID controller
             R_motor_duty = R_pid.update(error_R, dt/1000)
