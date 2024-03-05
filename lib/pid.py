@@ -29,14 +29,18 @@ class PID:
         self.prev_error = 0
         self.integral = 0
     
-    def update(self, curr_val, dt):
+    def update(self, error, dt):
 
-        error = self.setpoint - curr_val # Error units are rev / s
+        #error = self.setpoint - curr_val # Error units are rev / s
         #print(f'error: {error}')
         P = error*self.Kp
+        
         self.integral += error * dt * self.Ki    # Gain units are [ % duty cycle / (rad / s) ]
+        
         D = ((error-self.prev_error)/dt)*self.Kd
+        
         self.prev_error = error
+        
         #return P
         return (P + self.integral) # PID output is a duty cycle
     

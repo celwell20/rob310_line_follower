@@ -100,8 +100,12 @@ if __name__ == "__main__":
             L_pid.set_speed(L_setpoint)   # apply the setpoint to the pid controller
             R_pid.set_speed(R_setpoint)
             #print(dt)
-            L_motor_duty = L_pid.update(omega_L, dt/1000) # update the duty cycle output using the PID controller
-            R_motor_duty = R_pid.update(omega_R, dt/1000)
+            
+            error_L = L_setpoint - omega_L
+            error_R = R_setpoint - omega_R
+            
+            L_motor_duty = L_pid.update(error_L, dt/1000) # update the duty cycle output using the PID controller
+            R_motor_duty = R_pid.update(error_R, dt/1000)
             
             #print(f'left duty {L_motor_duty}, right duty {R_motor_duty}')
             
