@@ -13,14 +13,17 @@ LEFT_CTRL_INPUT = -1
 RIGHT_CTRL_INPUT = 1
 
 # Wheel speed PID parameters
-K_P = 0.5
-K_I = 0.1
-K_D = 0.0001
+#K_P = 0.5
+#K_I = 0.1
+#K_D = 0.0001
+K_P = 0.6
+K_I = 0.6
+K_D = 0.02
 
 LEFT_MOTOR_POLARITY = 1
 RIGHT_MOTOR_POLARITY = -1
 
-ALPHA = 0.9 # smoothing parameter
+ALPHA = 0.7 # smoothing parameter
 
 CONV = 1/(20.0 * 78.0)   # GEAR RATIO / ENCODER CPR CONVERZAION FACTOR; converts from encoder counts to motor output revs
 dt = 0.1

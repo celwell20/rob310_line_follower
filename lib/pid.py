@@ -8,9 +8,12 @@ import asyncio
 import machine
 
 # Wheel speed PID parameters
-K_P = 0.3
-K_I = 0.35
-K_D = 0.001
+#K_P = 0.3
+#K_I = 0.35
+#K_D = 0.001
+K_P = 0.6
+K_I = 0.6
+K_D = 0.02
 
 LEFT_MOTOR_POLARITY = 1
 RIGHT_MOTOR_POLARITY = -1
@@ -145,8 +148,8 @@ if __name__ == "__main__":
             
             #print(f'left setpoint: {L_setpoint}, right setpoint {R_setpoint}')
             #print(L_pid.error)
-            L_setpoint_filtered = L_filter.update(L_setpoint)
-            R_setpoint_filtered = R_filter.update(R_setpoint)
+            #L_setpoint_filtered = L_filter.update(L_setpoint)
+            #R_setpoint_filtered = R_filter.update(R_setpoint)
 
             #print(f'left filter: {L_setpoint_filtered}, right filter: {R_setpoint_filtered}')
 
@@ -155,7 +158,7 @@ if __name__ == "__main__":
 
             error_L = L_setpoint - omega_L
             error_R = R_setpoint - omega_R
-            
+            #print(error_L)
             r26 = analog26.read_u16()
             adc_voltage = r26 / 65535 * 3.1
             #r27 = analog27.read_u16() 
@@ -168,7 +171,7 @@ if __name__ == "__main__":
             R_motor_duty = R_pid.update(error_R, dt/1000)
             
             #print(f'left duty {L_motor_duty}, right duty {R_motor_duty}')
-            
+            #print(L_setpoint)
             print(f'{round(omega_L,5)}, {round(L_motor_duty,5)}, {round((present_time - start_benchmark)/1000,2)}, {round(r26,5)}')
             
             #L_motor_duty = 0.9
