@@ -3,10 +3,10 @@ import utime
 
 class Motor:
     def __init__(self, pwm_pin, dir_pin):
-        self.dir = Pin(dir_pin, Pin.OUT)
-        self.pwm = PWM(Pin(pwm_pin))
-        self.pwm.freq(10000)
-        self.pwm.duty_u16(0)
+        self.dir = Pin(dir_pin, Pin.OUT) # motor direction control pin
+        self.pwm = PWM(Pin(pwm_pin)) # motor pwm input pin
+        self.pwm.freq(10000) # set the pwm frequency
+        self.pwm.duty_u16(0) # set the pwm duty cycle
         
     def set(self, duty):
         if((duty >= 0.0) and (duty <= 1.0)):

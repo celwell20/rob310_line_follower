@@ -7,11 +7,6 @@ from motor import Motor
 from speed_smoothing_filter import SmoothingFilter
 from mbot_defs import *
 
-# Values for determining desired control state
-STOP_CTRL_INPUT = 0
-LEFT_CTRL_INPUT = -1
-RIGHT_CTRL_INPUT = 1
-
 # Wheel speed PID parameters
 #K_P = 0.5
 #K_I = 0.1

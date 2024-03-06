@@ -3,11 +3,11 @@ import utime
 
 class Encoder:
     def __init__(self, pinA, pinB):
-        self.encoderCount = 0
-        self.A = Pin(pinA, Pin.IN, Pin.PULL_UP)
-        self.B = Pin(pinB, Pin.IN, Pin.PULL_UP)
-        self.A.irq(self.A_ISR, Pin.IRQ_RISING or Pin.IRQ_FALLING)
-        self.B.irq(self.B_ISR, Pin.IRQ_RISING or Pin.IRQ_FALLING)
+        self.encoderCount = 0   # attribute to tally encoder count
+        self.A = Pin(pinA, Pin.IN, Pin.PULL_UP) # pin associated with encoder channel A
+        self.B = Pin(pinB, Pin.IN, Pin.PULL_UP) # pin associated with encoder channel B
+        self.A.irq(self.A_ISR, Pin.IRQ_RISING or Pin.IRQ_FALLING) # interrupt associated with channel A
+        self.B.irq(self.B_ISR, Pin.IRQ_RISING or Pin.IRQ_FALLING) # interrupt associated with channel B
 
     def A_ISR(self, pin):
         if self.A.value():
