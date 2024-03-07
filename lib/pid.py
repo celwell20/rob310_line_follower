@@ -11,9 +11,9 @@ import machine
 #K_P = 0.3
 #K_I = 0.35
 #K_D = 0.001
-K_P = 0.6
-K_I = 0.6
-K_D = 0.02
+K_P = 0.2
+K_I = 0.375
+K_D = 0.0075
 
 LEFT_MOTOR_POLARITY = 1
 RIGHT_MOTOR_POLARITY = -1
@@ -21,7 +21,7 @@ RIGHT_MOTOR_POLARITY = -1
 ALPHA = 0.4 # smoothing parameter
 
 CONV = 1/(20.0 * 78.0)   # GEAR RATIO / ENCODER CPR CONVERZAION FACTOR; converts from encoder counts to motor output revs
-dt = 0.1
+dt = 0.1 # test time step
 
 analog26 = machine.ADC(26)
 #analog27 = machine.ADC(27)
@@ -134,30 +134,30 @@ if __name__ == "__main__":
             r_enc_count_prev = r_enc_count_pres
             
             present_time = utime.ticks_ms()
-            dt = utime.ticks_diff(present_time, loop_start_time)
+            dt = utime.ticks_diff(present_time, loop_start_time) /1000
             #print(f'left revs: {CONV*l_enc_delta}, right revs {CONV*r_enc_delta}')
             #print(f"time delta: {utime.ticks_diff(present_time, loop_start_time)}")
             if dt == 0: # set measured wheel speed to zero at start to prevent dividing by zero
                 omega_L = 0
                 omega_R = 0
             else: # calculate present wheel speed velocities
-                omega_L = CONV * l_enc_delta / (dt / 1000)  # units are rev / s --> divide by 1000 to go from ms to s
-                omega_R = CONV * r_enc_delta / (dt / 1000)  # units are rev / s
+                omega_L = CONV * l_enc_delta / dt  # units are rev / s --> divide by 1000 to go from ms to s
+                omega_R = CONV * r_enc_delta / dt  # units are rev / s
             
             loop_start_time = present_time # book keeping for next control loop iteration
             
             #print(f'left setpoint: {L_setpoint}, right setpoint {R_setpoint}')
             #print(L_pid.error)
-            #L_setpoint_filtered = L_filter.update(L_setpoint)
-            #R_setpoint_filtered = R_filter.update(R_setpoint)
+            L_setpoint_filtered = L_filter.update(L_setpoint)
+            R_setpoint_filtered = R_filter.update(R_setpoint)
 
             #print(f'left filter: {L_setpoint_filtered}, right filter: {R_setpoint_filtered}')
 
-            #L_pid.set_speed(L_setpoint)   # apply the setpoint to the pid controller
-            #R_pid.set_speed(R_setpoint)
+            L_pid.set_speed(L_setpoint_filtered)   # apply the setpoint to the pid controller
+            R_pid.set_speed(R_setpoint_filtered)
 
-            error_L = L_setpoint - omega_L
-            error_R = R_setpoint - omega_R
+            error_L = L_setpoint_filtered - omega_L
+            error_R = R_setpoint_filtered - omega_R
             #print(error_L)
             r26 = analog26.read_u16()
             adc_voltage = r26 / 65535 * 3.1
@@ -167,8 +167,8 @@ if __name__ == "__main__":
             
             #print(f'omega_L: {round(omega_L,2)}, omega_R: {round(omega_R,2)}, error_L: {round(error_L,2)}, error_R: {round(error_R,2)}')
             
-            L_motor_duty = L_pid.update(error_L, dt/1000) # update the duty cycle output using the PID controller
-            R_motor_duty = R_pid.update(error_R, dt/1000)
+            L_motor_duty = L_pid.update(error_L, dt) # update the duty cycle output using the PID controller
+            R_motor_duty = R_pid.update(error_R, dt)
             
             #print(f'left duty {L_motor_duty}, right duty {R_motor_duty}')
             #print(L_setpoint)
