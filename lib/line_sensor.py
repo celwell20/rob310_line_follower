@@ -1,3 +1,18 @@
+#################################################################
+# line_sensor.py
+# 
+# task: create a line sensor class by filling in the functions
+#       __init__() and LineSensor.read(). LineSensor.read() should
+#       return one byte of data that contains the readings from the 7 reflectance
+#       sensors and the control bit value. While D0 in the byte is always the control
+#       bit value, we do not use this value when interpreting the data; we only use it
+#       to turn the reflectance sensor's LEDs on/off.
+#
+# init args: sda_pin - pin# connected to the MBot control board's I2C SDA pin
+#            scl_pin - pin# connected to the MBot control board's I2C SCL pin
+#
+##################################################################
+
 from machine import I2C, Pin
 import time
 

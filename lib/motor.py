@@ -28,7 +28,7 @@ class Motor:
             self.dir.off()
             self.pwm.duty_u16(int(-duty * 65535))
         else:
-            print("ERROR: duty o  ut of range")
+            print("ERROR: duty out of range")
             self.pwm.duty_u16(int(0))
 
 if __name__ == "__main__":

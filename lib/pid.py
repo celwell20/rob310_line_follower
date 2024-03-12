@@ -1,3 +1,16 @@
+##############################################################
+#  pid.py
+#
+#  task: create a PID controller class by filling in the functions
+#  
+#  init args: P - proportional gain value
+#             I - intergral gain value
+#             D - derivative gain value
+#             setpoint - wheel speed setpoint for the controller
+# 
+#
+#############################################################
+
 #from machine import Pin, PWM
 import utime
 from encoder import Encoder
