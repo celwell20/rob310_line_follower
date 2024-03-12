@@ -1,3 +1,15 @@
+#################################################################
+# motor.py
+# 
+# task: create a motor class by filling in the functions
+#       Motor.set() should take a duty cycle from -1 to +1
+#       and set the control signals to the motor driver
+#
+# init args: pwm_pin - pin# connected to PWM input of motor driver
+#            dir_pin - pin# connected to DIR input of motor driver
+#
+##################################################################
+
 from machine import Pin, PWM
 import utime
 
@@ -16,7 +28,7 @@ class Motor:
             self.dir.off()
             self.pwm.duty_u16(int(-duty * 65535))
         else:
-            print("ERROR: duty out of range")
+            print("ERROR: duty o  ut of range")
             self.pwm.duty_u16(int(0))
 
 if __name__ == "__main__":

@@ -1,3 +1,19 @@
+##############################################################
+#  encoder.py
+#
+#  task: create an encoder class by filling in the functions
+#  
+#  args: pinA and pinB where the encoder is connected
+#
+#  note: to set up an IRQ that runs on both a rising
+#  and falling edge on a pin do the following:
+#   
+#    pin.IRQ(ISR, Pin.IRQ_FALLING | Pin.IRQ_RISING)
+#
+#  where pin is the pin name, and ISR is the handler function 
+#
+#############################################################
+
 from machine import Pin
 import utime
 
