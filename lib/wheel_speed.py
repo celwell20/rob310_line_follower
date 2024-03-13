@@ -3,33 +3,22 @@
 #
 #  task: create a class that calculates wheel speed in (revolutions / second) from an input of (encoders ticks / second)
 #  
-#  init args: P - proportional gain value
-#             I - intergral gain value
-#             D - derivative gain value
-#             setpoint - wheel speed setpoint for the controller
-# 
+#  init args: init_ticks - the encoder tick value read at initialization of the encoders, before the control loop starts
+#             init_time - the time value at initialization of encoder, motor, controller objects, etc.
 #
 #############################################################
 
 import utime
-import machine
-from bangbang import BangBang
-from pid import PID
-from line_sensor import LineSensor
-from encoder import Encoder
-from motor import Motor
-from speed_smoothing_filter import SmoothingFilter
-from mbot_defs import *
 
 class WheelSpeedCalculator:
     
-    def __init(self, init_ticks, init_time):
-        self.CONV = 1/(20.0 * 78.0)
+    def __init__(self, init_ticks, init_time):
+        self.CONV = 1/(20.0 * 78.0) # conversion from ticks to revolutions
         
-        self.previous_ticks = init_ticks
-        self.previous_time = init_time
+        self.previous_ticks = init_ticks # initialize previous time and ticks to initial time and tick values
+        self.previous_time = init_time   # set before the control loop starts
         
-    def calculateSpeed(present_ticks, present_time):
+    def calculateSpeed(self, present_ticks, present_time):
         
         enc_delta = present_ticks - self.previous_ticks # encoder delta between previous loop and now
         dt = utime.ticks_diff(present_time, self.previous_time) / 1000 # divide by 1000 to convert from milliseconds to seconds

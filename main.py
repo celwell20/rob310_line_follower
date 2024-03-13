@@ -6,6 +6,7 @@ from line_sensor import LineSensor
 from encoder import Encoder
 from motor import Motor
 from speed_smoothing_filter import SmoothingFilter
+from wheel_speed import WheelSpeedCalculator
 from mbot_defs import *
 
 frequency = 100000000 # 50 MHz
@@ -61,6 +62,9 @@ if __name__ == "__main__":
     
     loop_start_time = utime.ticks_ms()    # get the time in milliseconds
     
+    l_whsc = WheelSpeedCalculator(l_enc_count_pres, loop_start_time)
+    r_whsc = WheelSpeedCalculator(r_enc_count_pres, loop_start_time)
+    
     try:
         
         while True:
@@ -70,28 +74,30 @@ if __name__ == "__main__":
             #print(f'left encoder: {l_enc_count_pres}, right encoder {r_enc_count_pres}')
             
             #print(f'prev: {l_enc_count_prev}; pres: {l_enc_count_pres}; delta: {l_enc_delta}')
-            l_enc_delta = l_enc_count_pres - l_enc_count_prev # encoder deltas between previous loop and now
-            r_enc_delta = r_enc_count_pres - r_enc_count_prev
+            #l_enc_delta = l_enc_count_pres - l_enc_count_prev # encoder deltas between previous loop and now
+            #r_enc_delta = r_enc_count_pres - r_enc_count_prev
             #print(f'left delta: {l_enc_delta}, right delta {r_enc_delta}')
-            l_enc_count_prev = l_enc_count_pres   # book keeping for next iteration of control loop
-            r_enc_count_prev = r_enc_count_pres
+            #l_enc_count_prev = l_enc_count_pres   # book keeping for next iteration of control loop
+            #r_enc_count_prev = r_enc_count_pres
             
             present_time = utime.ticks_ms()
-            dt = utime.ticks_diff(present_time, loop_start_time) / 1000
+            #dt = utime.ticks_diff(present_time, loop_start_time) / 1000
+            omega_L = l_whsc.calculateSpeed(l_enc_count_pres, present_time)
+            omega_R = r_whsc.calculateSpeed(r_enc_count_pres, present_time)
             #print(f'left revs: {CONV*l_enc_delta}, right revs {CONV*r_enc_delta}')
             #print(f"time delta: {utime.ticks_diff(present_time, loop_start_time)}")
-            if dt == 0: # set measured wheel speed to zero at start to prevent dividing by zero
-                omega_L = 0
-                omega_R = 0
-            else: # calculate present wheel speed velocities
-                omega_L = CONV * l_enc_delta / dt  # units are rev / s --> divide by 1000 to go from ms to s
-                omega_R = CONV * r_enc_delta / dt  # units are rev / s
+            #if dt == 0: # set measured wheel speed to zero at start to prevent dividing by zero
+            #    omega_L = 0
+            #    omega_R = 0
+            #else: # calculate present wheel speed velocities
+            #    omega_L = CONV * l_enc_delta / dt  # units are rev / s --> divide by 1000 to go from ms to s
+            #    omega_R = CONV * r_enc_delta / dt  # units are rev / s
             
             #print(f'omega_L: {round(omega_L,2)}, omega_R {round(omega_R,2)}')
             
-            loop_start_time = present_time # book keeping for next control loop iteration
+            #loop_start_time = present_time # book keeping for next control loop iteration
             
-            prev_L_setpt = L_setpoint
+            #prev_L_setpt = L_setpoint
             
             L_setpoint, R_setpoint = bb_controller.update()
             
